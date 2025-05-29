@@ -1,4 +1,3 @@
-import os
 import torch
 import torch.nn as nn
 import dgl
@@ -98,25 +97,29 @@ def train_formnet(model, graph, token_features, coordinates, input_ids, attentio
 # 6. Main Function
 def main():
     parser = argparse.ArgumentParser(description="FormNet Document Extraction")
-    parser.add_argument("--document", type=str, required=True, help="Path to input document")
+    parser.add_argument("--document", type=str, default="sample_form.pdf", help="Path to input document")
     args = parser.parse_args()
 
+    # Extract tokens and coordinates
     document_path = args.document
-    if not os.path.exists(document_path):
-        raise FileNotFoundError(f"Document not found: {document_path}")
     tokens, coordinates = extract_ocr_data(document_path)
 
+    # Dummy data for testing
     token_features = torch.randn(len(tokens), 768)
     coordinates = torch.tensor(coordinates, dtype=torch.float)
     input_ids = torch.randint(0, 1000, (1, len(tokens)))
     attention_mask = torch.ones(1, len(tokens))
     labels = torch.randint(0, 10, (1, len(tokens)))
 
+    # Build graph
     graph = build_graph(coordinates, tokens)
+
+    # Initialize model
     bert_config = BertConfig(max_position_embeddings=len(tokens))
     model = FormNet(bert_config, gcn_input_dim=768, gcn_hidden_dim=768, num_labels=10)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0002)
 
+    # Train
     loss = train_formnet(model, graph, token_features, coordinates, input_ids, attention_mask, labels, optimizer)
     print(f"Training loss: {loss}")
 
