@@ -1,131 +1,121 @@
-#🧾 FormNet-Based Document Extraction System
+# 🧾 FormNet-Based Document Extraction System
+
 A partial implementation of FormNet – a powerful document information extraction model designed for structured documents like invoices, receipts, and forms. This project integrates OCR and graph-based learning to extract contextual entities by modeling both the layout and content of documents.
 
-##📌 Overview
+## 📌 Overview
+
 FormNet enhances traditional document parsing by introducing:
 
-🧠 Rich Attention Mechanism: Computes attention using spatial relationships between word tokens.
-##🔗 Graph Convolutional Network (GCN): Constructs Super-Tokens by aggregating neighboring contextual information.
-
-⚙️ ETC Transformer Backbone: Utilizes sequence modeling for accurate entity extraction.
+- 🧠 **Rich Attention Mechanism**: Computes attention using spatial relationships between word tokens
+- 🔗 **Graph Convolutional Network (GCN)**: Constructs Super-Tokens by aggregating neighboring contextual information
+- ⚙️ **ETC Transformer Backbone**: Utilizes sequence modeling for accurate entity extraction
 
 This implementation focuses on GCN Super-Tokens, Rich Attention, and basic ETC integration, with OCR support via Tesseract.
 
-##🚀 Features
-🔍 OCR Integration: Extracts words and coordinates using Tesseract OCR.
+## 🚀 Features
 
-🧩 GCN-Based Super-Tokens: Graph modeling of spatially related tokens for better context.
+- 🔍 **OCR Integration**: Extracts words and coordinates using Tesseract OCR
+- 🧩 **GCN-Based Super-Tokens**: Graph modeling of spatially related tokens for better context
+- 📐 **Rich Attention**: Attention scoring with 2D layout awareness
+- 🧠 **ETC Transformer**: Captures relationships across the token graph
+- 🧪 **Placeholder for Viterbi Decoding**: Ready for sequence label decoding integration
 
-📐 Rich Attention: Attention scoring with 2D layout awareness.
+## 🛠️ Setup
 
-🧠 ETC Transformer: Captures relationships across the token graph.
+### ✅ Prerequisites
 
-🧪 Placeholder for Viterbi Decoding: Ready for sequence label decoding integration.
-
-##🛠️ Setup
-✅ Prerequisites
-Python ≥ 3.8
+- Python ≥ 3.8
 
 Install the required libraries:
 
-##bash
-Copy
-Edit
+```bash
 pip install -r requirements.txt
-requirements.txt:
+```
 
-##shell
-Copy
-Edit
+**requirements.txt:**
+```
 torch>=2.0.0  
 dgl>=1.0.0  
 transformers>=4.30.0  
 pytesseract>=0.3.10  
 numpy>=1.20.0  
-🖥️ Install Tesseract OCR
-macOS: brew install tesseract
+```
 
-Ubuntu: sudo apt-get install tesseract-ocr
+### 🖥️ Install Tesseract OCR
 
-Windows: Install from GitHub
+- **macOS**: `brew install tesseract`
+- **Ubuntu**: `sudo apt-get install tesseract-ocr`
+- **Windows**: Install from [GitHub](https://github.com/UB-Mannheim/tesseract/wiki)
 
-###📄 Usage
-1. Prepare Your Document
-Place a sample form PDF or image (e.g., sample.pdf) in the project root.
+## 📄 Usage
 
-###2. Run the Extraction
-bash
-Copy
-Edit
+### 1. Prepare Your Document
+Place a sample form PDF or image (e.g., `sample.pdf`) in the project root.
+
+### 2. Run the Extraction
+```bash
 python main.py --document sample.pdf
+```
+
 This will:
+- Use Tesseract to extract tokens and bounding boxes
+- Build a spatial graph
+- Apply the GCN + Rich Attention + ETC Transformer
+- Output entity predictions (labels if available)
 
-Use Tesseract to extract tokens and bounding boxes.
+## 🧪 Training (To Be Extended)
 
-Build a spatial graph.
-
-Apply the GCN + Rich Attention + ETC Transformer.
-
-Output entity predictions (labels if available).
-
-##🧪 Training (To Be Extended)
 To train on your dataset (e.g., CORD, FUNSD):
 
-Pre-process into token, coordinate, and label format.
+1. Pre-process into token, coordinate, and label format
+2. Modify `main.py` to include a training loop
+3. Adjust hyperparameters (e.g., learning rate = 0.0002, GCN layers = 2)
 
-Modify main.py to include a training loop.
+## 📊 Evaluation
 
-Adjust hyperparameters (e.g., learning rate = 0.0002, GCN layers = 2).
-
-##📊 Evaluation
 Evaluate using standard metrics like F1-score, and benchmark against models like:
 
-DocFormer
+- DocFormer
+- LayoutLM
+- FormNet-A3 (97.28% F1 on CORD)
 
-LayoutLM
+## 📁 Project Structure
 
-FormNet-A3 (97.28% F1 on CORD)
-
-##📁 Project Structure
-bash
-Copy
-Edit
+```
 ├── main.py                   # Main script
 ├── sample.pdf                # Input form
 ├── output.txt                # Prediction output
 ├── requirements.txt          # Dependencies
 ├── README.md                 # Project documentation
 └── tempCodeRunnerFile.py     # Temporary script (optional)
-⚠️ Limitations
-❗ Partial Implementation – Viterbi decoding & pre-training are not included.
+```
 
-📄 OCR Quality – Tesseract may fail on noisy scans; better OCR engines recommended.
+## ⚠️ Limitations
 
-📚 Dataset Access – Requires datasets like CORD, FUNSD, Payment (available on Hugging Face or request-based academic access).
+- ❗ **Partial Implementation** – Viterbi decoding & pre-training are not included
+- 📄 **OCR Quality** – Tesseract may fail on noisy scans; better OCR engines recommended
+- 📚 **Dataset Access** – Requires datasets like CORD, FUNSD, Payment (available on Hugging Face or request-based academic access)
+- 📉 **No Pre-training** – Lacks MLM-based large corpus pre-training, crucial for optimal performance
 
-📉 No Pre-training – Lacks MLM-based large corpus pre-training, crucial for optimal performance.
+## 📈 Future Work
 
-##📈 Future Work
-✅ Integrate Viterbi decoding for sequential labeling.
+- ✅ Integrate Viterbi decoding for sequential labeling
+- 🔍 Replace Tesseract with Google Vision or Azure OCR
+- 🔁 Add Masked Language Modeling (MLM) pre-training on form datasets
+- ⚡ Optimize GCN/Attention for speed and accuracy
+- 🔄 Enable batch processing and multi-GPU training
 
-🔍 Replace Tesseract with Google Vision or Azure OCR.
+## 📚 References
 
-🔁 Add Masked Language Modeling (MLM) pre-training on form datasets.
+- **FormNet Paper**: [Add Link Here]
+- **Datasets**: CORD, FUNSD, Payment
+- **Libraries**: PyTorch, DGL, Hugging Face Transformers, Pytesseract
 
-⚡ Optimize GCN/Attention for speed and accuracy.
+## 🤝 Contributions
 
-🔄 Enable batch processing and multi-GPU training.
-
-##📚 References
-FormNet Paper: [Add Link Here]
-
-Datasets: CORD, FUNSD, Payment
-
-Libraries: PyTorch, DGL, Hugging Face Transformers, Pytesseract
-
-##🤝 Contributions
-Contributions are welcome!
+Contributions are welcome!  
 Please open an issue or submit a pull request to help improve this project.
 
-##📄 License
+## 📄 License
+
 This project is licensed under the MIT License.
